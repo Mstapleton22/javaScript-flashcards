@@ -30,6 +30,7 @@ class App extends Component {
     this.setState({
       cardExist: true,
       currentCard: randomCard,
+      inputValue: false,
     })
   }
 
@@ -45,19 +46,16 @@ class App extends Component {
       this.setState({
         cardExist: true,
         currentCard: this.state.data[id],
-        id: this.state.id + 1
+        id: this.state.id + 1,
+        inputValue: false
       })
     }
   }
 
   inputAnswer = () => {
-    console.log('called')
-    if (this.state.currentCard.name === this.state.input) {
-      this.setState({
-        inputValue: true
-      })
-    }
+    return this.state.currentCard.name === this.state.input ? this.setState({ inputValue: true }) : ''
   }
+
   updateInput = (event) => {
     this.setState({
       input: event.target.value
@@ -100,6 +98,7 @@ class App extends Component {
             generateNext={this.generateNext}
           />}
           {<Inputbox
+            inputValue={this.state.inputValue}
             updateInput={this.updateInput}
             inputAnswer={this.inputAnswer}
           />}
