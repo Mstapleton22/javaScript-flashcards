@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import { Router, Route } from "react-router-dom";
 import Nav from './components/Nav.js'
 import Card from './components/Card';
 import Inputbox from './components/Inputbox';
-import CardData from './CardData.json'
+// import CardData from './CardData.json'
 import Button from './components/Button.js';
+import AddCard from './components/AddCard.js';
 import './App.css';
 
 class App extends Component {
@@ -11,7 +13,7 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      data: CardData.methods,
+      data: [],
       cardExist: false,
       currentCard: '',
       input: '',
@@ -19,6 +21,16 @@ class App extends Component {
       id: 0,
 
     }
+  }
+
+  componentDidMount() {
+    fetch("http://localhost:3001/")
+      .then(data => data.json())
+      .then(JSONdata => {
+        this.setState({
+          data: JSONdata
+        })
+      })
   }
 
   getRandomCard(max) {
@@ -37,17 +49,18 @@ class App extends Component {
   generateNext = (event) => {
     event.preventDefault()
     const id = this.state.id
-    if (id >= this.state.data.length - 1) {
-      this.setState({
-        currentCard: this.state.data[id],
-        id: 0
-      })
-    } else {
+    if (id < this.state.data.length) {
       this.setState({
         cardExist: true,
         currentCard: this.state.data[id],
         id: this.state.id + 1,
         inputValue: false
+      })
+    } else if (id === this.state.data.length) {
+      console.log('else')
+      this.setState({
+        currentCard: this.state.data[0],
+        id: 0
       })
     }
   }
@@ -81,9 +94,17 @@ class App extends Component {
 
 
   render() {
-    console.log('cardexists')
+    // console.log(this.state.data)
     return (
       <div className="container-fluid">
+        {/* <Router>
+          <div>
+            <Route exact path="/" component={App.js} />
+            // components that are dynamically rendered on the click.
+            <Route path="/AddCard" component={AddCard} />
+          </div>
+        </Router> */}
+
         <Nav />
         <div className="body">
           {this.state.cardExist
@@ -91,7 +112,6 @@ class App extends Component {
               currentCard={this.state.currentCard}
             />
             : ''}
-          {/* <h6 className="row header justify-content-center mt-5">Click "Easy" "Medium" "Hard" to display a new card in that category</h6> */}
           {<Button
             generateRandom={this.generateRandom}
             // generatePrev={this.generatePrev}
@@ -102,10 +122,10 @@ class App extends Component {
             updateInput={this.updateInput}
             inputAnswer={this.inputAnswer}
           />}
-          <div className="row justify-content-center mb-5 mt-5">
+          {/* <div className="row justify-content-center mb-5 mt-5">
             <button type="button" class="btn btn-success mb-5 mt-2 mr-5">Correct! Now remove</button>
             <button type="button" class="btn btn-danger mb-5 mt-2 ml-5">Wrong!Keep in deck</button>
-          </div>
+          </div> */}
         </div>
       </div >
     );

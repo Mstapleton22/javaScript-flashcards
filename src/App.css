@@ -36,6 +36,7 @@
 }
 .container-fluid {
   background-color:lightgray;
+  background-size: 100%;
 }
 
 .header {
