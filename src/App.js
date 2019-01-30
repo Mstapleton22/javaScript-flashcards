@@ -60,7 +60,8 @@ class App extends Component {
       console.log('else')
       this.setState({
         currentCard: this.state.data[0],
-        id: 0
+        id: 0 + 1,
+        inputValue: false
       })
     }
   }
