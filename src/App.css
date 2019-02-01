@@ -34,11 +34,18 @@
 .body {
   background-color:grey;
 }
-.container-fluid {
+/* .container-fluid {
   background-color:lightgray;
-  background-size: 100%;
+
+} */
+
+.navbar {
+  background-color: lightgray;
 }
 
+.dropdown {
+  margin-left: 35.5%;
+}
 .header {
  background-color:lightgray;
 }

@@ -6,7 +6,7 @@ import Home from './components/Home.js';
 import AddCard from './components/AddCard.js';
 import Body from './components/Body.js';
 import './App.css';
-
+var url = process.env.URL || "http://localhost:3001/"
 class App extends Component {
 
   constructor(props) {
@@ -22,7 +22,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    fetch("http://localhost:3001/")
+    fetch(`${url}`)
       .then(data => data.json())
       .then(JSONdata => {
         this.setState({
@@ -30,6 +30,32 @@ class App extends Component {
         })
       })
   }
+
+  newCard = (event) => {
+    console.log(event.target[3].value)
+    // event.preventDefault()
+    return fetch(`${url}methods`, {
+      method: 'POST',
+      body: JSON.stringify({
+        name: event.target[0].value,
+        description: event.target[1].value,
+        link: event.target[2].value,
+        difficulty: event.target[3].value
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+      .then(data => data.json())
+      .then(JSONdata => {
+        console.log(JSONdata)
+        this.setState({
+          data: [...this.state.data, JSONdata]
+        })
+      })
+  }
+
 
   getRandomCard(max) {
     return Math.floor(Math.random() * (max + 1));
@@ -46,7 +72,7 @@ class App extends Component {
   }
 
   generateNext = (event) => {
-    event.preventDefault()
+    // event.preventDefault()
     const id = this.state.id
     if (id < this.state.data.length) {
       this.setState({
@@ -54,10 +80,8 @@ class App extends Component {
         currentCard: this.state.data[id],
         id: this.state.id + 1,
         inputValue: false,
-        input: '',
       })
     } else if (id === this.state.data.length) {
-      console.log('else')
       this.setState({
         currentCard: this.state.data[0],
         id: 1,
@@ -81,8 +105,6 @@ class App extends Component {
 
 
   render() {
-    console.log("looping")
-
     return (
       <Router>
         <div className="container-fluid">
@@ -90,7 +112,9 @@ class App extends Component {
           <Nav
           />
           <Route path="/home" render={() => <Home />} />
-          <Route path="/addcard" render={() => <AddCard />} />
+          <Route path="/addcard" render={() => <AddCard
+            newCard={this.newCard}
+          />} />
           <Route path="/study" render={() => <Body
             currentCard={this.state.currentCard}
             cardExist={this.state.cardExist}
